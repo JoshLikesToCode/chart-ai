@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "agent": "node scripts/test-agent.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.50",
+    "@cloudflare/ai-chat": "^0.3.2",
     "@excalidraw/excalidraw": "^0.18.0",
     "ai": "^6.0.146",
     "react": "^19.0.0",
@@ -23,6 +25,6 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.0.0",
     "typescript": "^5.0.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0" 
   }
 }

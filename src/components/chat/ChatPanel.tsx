@@ -2,22 +2,35 @@ import { useState } from "react";
 import MessageList from "./MessageList";
 import type { Message } from "./types";
 import "./chat.css";
+import { UIMessage } from "ai";
 
-export default function ChatPanel() {
-  const [messages] = useState<Message[]>([]);
+interface ChatPanelProps {
+  messages: UIMessage[];
+  sendMessage: (message: {role: 'user', parts: {type: 'text', text: string}[]}) => void;
+  status: string;
+}
+
+export default function ChatPanel({ messages, sendMessage, status }: ChatPanelProps) {
   const [input, setInput] = useState("");
+  const typedMessages = messages as unknown as Message[];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: wire this up to the agent
+    if(!input.trim()) return;
+    sendMessage( {
+      role: 'user',
+      parts: [{type: 'text', text: input}]
+    })
+    setInput("");
   };
 
+  const isStreaming = status === 'submitted' || status === 'streaming';
   return (
     <div className="chat-panel">
       <div className="chat-header">
         <h2>Chat</h2>
       </div>
-      <MessageList messages={messages} />
+      <MessageList messages={typedMessages} />
       <form className="chat-input-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -25,8 +38,9 @@ export default function ChatPanel() {
           placeholder="Describe a diagram..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          disabled={isStreaming}
         />
-        <button type="submit" className="chat-send-btn">
+        <button type="submit" className="chat-send-btn" disabled={isStreaming || !input.trim()}>
           Send
         </button>
       </form>

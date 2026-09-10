@@ -83,7 +83,7 @@ export const tools = {
       return { elements };
     },
   }),
-  // naive 1shoot tool at modifying an existing diagram
+  // naive 1shot tool at modifying an existing diagram
   modifyDiagram: tool({
     description:
       "Modify an existing diagram by adding, removing, or changing elements. Use this when the user asks you to update or edit a diagram. Return the updated array of Excalidraw elements.",
