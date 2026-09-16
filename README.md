@@ -11,7 +11,7 @@ An agentic diagram design tool: an Excalidraw canvas driven by an AI agent that 
 - Searches a private knowledge corpus via RAG when it needs precise reference material
 - Streams responses, shows tool status, and handles approvals for risky actions
 
-This is a work in progress, built incrementally. The canvas and chat shell exist; the agent, evals, and everything else get built on top of them.
+This is a work in progress, built incrementally. The canvas, chat UI, and agent (with tool calls to generate/modify diagrams) are working; evals and everything after that get built on top of them.
 
 ## Setup
 
@@ -48,9 +48,9 @@ Starts the app at http://localhost:5173 (or 5174/5175 if that port's taken).
 ## Roadmap
 
 - [x] Excalidraw canvas + chat UI shell
-- [ ] Cloudflare Workers agent (Agents SDK) with structured tool calls
-- [ ] Streaming chat experience with tool status
-- [ ] Eval harness with a golden dataset and automated scorers
+- [x] Cloudflare Workers agent (Agents SDK) with structured tool calls
+- [x] Streaming chat experience with tool status
+- [ ] Eval harness with a golden dataset and automated scorers (golden dataset exists, runner + scorers not built yet)
 - [ ] Context engineering: system prompt design, canvas state as context, compaction
 - [ ] Advanced tool use: tool search, sandboxed code execution, few-shot tool examples
 - [ ] RAG over a private knowledge corpus
