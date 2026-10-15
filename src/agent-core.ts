@@ -1,4 +1,10 @@
-import { generateText, streamText, stepCountIs } from "ai";
+import {
+  generateText,
+  streamText,
+  stepCountIs,
+  type LanguageModel,
+  type ModelMessage,
+} from "ai";
 import { tools } from "./tools";
 
 export const SYSTEM_PROMPT = `You are a diagram design assistant. You help users create and modify diagrams on an Excalidraw canvas.
@@ -17,12 +23,19 @@ Guidelines for generating diagrams:
 
 When the user asks to modify an element, use the modifyDiagram tool with the element's id.`;
 
+type AgentOptions = {
+  model: LanguageModel;
+  messages: ModelMessage[];
+  systemPrompt?: string;
+  maxSteps?: number;
+};
+
 export function streamAgent({
   model,
   messages,
   systemPrompt = SYSTEM_PROMPT,
   maxSteps = 5,
-}) {
+}: AgentOptions) {
   return streamText({
     model,
     system: systemPrompt,
@@ -37,7 +50,7 @@ export async function runAgent({
   messages,
   systemPrompt = SYSTEM_PROMPT,
   maxSteps = 5,
-}) {
+}: AgentOptions) {
   const result = await generateText({
     model,
     system: systemPrompt,
@@ -61,16 +74,16 @@ type StepLike = {
 };
 
 export function extractElements(steps: StepLike[]): unknown[] {
-  const elemeents: unknown[] = [];
+  const elements: unknown[] = [];
   for (const step of steps) {
     for (const toolResult of step.toolResults ?? []) {
-      if ((toolResult.toolName = "generateDiagram")) {
+      if (toolResult.toolName === "generateDiagram") {
         const output = toolResult.output as { elements: unknown[] };
         if (Array.isArray(output?.elements)) {
-          elemeents.push(...output.elements);
+          elements.push(...output.elements);
         }
       }
     }
   }
-  return elemeents;
+  return elements;
 }
