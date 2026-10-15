@@ -69,7 +69,10 @@ async function main() {
 
   const outDir = join(ROOT, "evals/results");
   mkdirSync(outDir, { recursive: true });
-  const outPath = join(outDir, `${new Date().toISOString().replace(/[:.]/g, "-")}.json`);
+  const outPath = join(
+    outDir,
+    `${new Date().toISOString().replace(/[:.]/g, "-")}.json`,
+  );
   writeFileSync(outPath, JSON.stringify(results, null, 2));
   console.log(`\nWrote ${outPath}`);
 }

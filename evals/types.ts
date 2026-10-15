@@ -2,12 +2,22 @@
 // prompt the agent should handle, plus what a good response looks like.
 
 export type Difficulty = "simple" | "medium" | "hard" | "edge";
-export type Category = "layout" | "content" | "structure" | "edge-case";
+export type Category = "create" | "modify" | "domain" | "edge";
+
+// Prior conversation state for "modify" cases: the canvas the user already has.
+export interface Seed {
+  userPrompt: string;
+  assistantConfirmation: string;
+  elements: Record<string, unknown>[];
+}
 
 export interface TestCase {
   id: string;
   input: string;
   expectedCharacteristics: string[];
+  expectedKeywords?: string[];
+  seed?: Seed;
+  preservedIds?: string[];
   difficulty: Difficulty;
   category: Category;
 }
