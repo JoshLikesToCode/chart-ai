@@ -8,13 +8,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "agent": "node scripts/test-agent.mjs",
-    "eval": "dotenv -e .dev.vars tsx evals/runs.ts"
+    "eval": "dotenv -e .dev.vars -- braintrust eval evals/diagramEval.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.50",
     "@cloudflare/ai-chat": "^0.3.2",
     "@excalidraw/excalidraw": "^0.18.0",
     "ai": "^6.0.146",
+    "braintrust": "^3.37.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^4.3.6"
