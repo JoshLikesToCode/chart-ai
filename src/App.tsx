@@ -1,11 +1,21 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useAgent } from "agents/react";
 import { useAgentChat } from "@cloudflare/ai-chat/react";
-import { convertToExcalidrawElements, newElementWith } from "@excalidraw/excalidraw";
+import {
+  convertToExcalidrawElements,
+  newElementWith,
+} from "@excalidraw/excalidraw";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
 import Canvas from "./components/Canvas";
 import ChatPanel from "./components/chat/ChatPanel";
 import "./App.css";
+import {
+  UIMessage,
+  UIDataTypes,
+  UITools,
+  FileUIPart,
+  ChatRequestOptions,
+} from "ai";
 
 const sessionId = crypto.randomUUID();
 
@@ -21,6 +31,19 @@ export default function App() {
 
   const agent = useAgent({ agent: "design-agent", name: sessionId });
   const { messages, sendMessage, status } = useAgentChat({ agent });
+  const sendWIthCanvas = useCallback(
+    (msg: { role: "user"; parts: { type: "text"; text: string }[] }) => {
+      const elements = excalidrawAPI?.getSceneElements() ?? [];
+      sendMessage({
+        ...msg,
+        parts: [
+          ...msg.parts,
+          { type: "data-canvas-state", data: { elements } },
+        ],
+      });
+    },
+    [sendMessage, excalidrawAPI],
+  );
 
   useEffect(() => {
     if (!excalidrawAPI) return;
@@ -51,16 +74,17 @@ export default function App() {
             elementId?: string;
             updates?: Record<string, any>;
           };
-          if(output?.elementId && output.updates) {
+          if (output?.elementId && output.updates) {
             const curr = excalidrawAPI.getSceneElements();
-            const next = curr.map(el => {
-              return el.id === output.elementId ? newElementWith(el, output.updates as any) : el;
+            const next = curr.map((el) => {
+              return el.id === output.elementId
+                ? newElementWith(el, output.updates as any)
+                : el;
             });
             excalidrawAPI.updateScene({ elements: next });
           }
-
+        }
       }
-    }
     }
   }, [messages, excalidrawAPI]);
 
@@ -69,8 +93,11 @@ export default function App() {
       <div className="canvas-container">
         <Canvas onApiReady={handleApiReady} onThemeChange={setTheme} />
       </div>
-      <ChatPanel messages={messages} sendMessage={sendMessage} status={status} />
+      <ChatPanel
+        messages={messages}
+        sendMessage={sendWIthCanvas}
+        status={status}
+      />
     </div>
   );
 }
-

@@ -30,6 +30,7 @@ Eval("Chart AI", {
     const res = await runAgent({
       model: openai("gpt-5.4-mini"),
       messages: buildMessages(tc),
+      canvasState: {} as Parameters<typeof runAgent>[0]["canvasState"],
     });
     return { text: res.text, elements: res.elements };
   },
